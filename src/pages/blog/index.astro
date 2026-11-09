@@ -33,7 +33,7 @@ const fmt = (d: string) => new Date(d).toLocaleDateString('lt-LT', { year: 'nume
           <a href={`/blog/${p.id}/`} class="post card reveal">
             <Image src={img(p.data.image)!} alt={p.data.title} widths={[400, 640]} sizes="(max-width: 640px) 100vw, 380px" loading={i < 3 ? 'eager' : 'lazy'} />
             <div class="post-body">
-              <div class="meta"><span class="chip">{p.data.category}</span><span class="muted">{p.data.readTime}</span></div>
+              <div class="meta"><span class="chip">{p.data.category}</span><span class="muted">{p.data.preview ? 'Pilna versija netrukus' : p.data.readTime}</span></div>
               <h2>{p.data.title}</h2>
               <p class="muted">{p.data.description}</p>
               <div class="foot"><time datetime={p.data.date} class="muted">{fmt(p.data.date)}</time><span class="more">Skaityti <Icon name="arrow" size={16} /></span></div>

@@ -10,6 +10,8 @@ const blog = defineCollection({
     date: z.string(),
     readTime: z.string(),
     image: z.string(),
+    // true – rodoma tik įžanga, pilnas tekstas dar rašomas (noindex, ne sitemap'e)
+    preview: z.boolean().default(false),
   }),
 });
 

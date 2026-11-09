@@ -43,5 +43,5 @@ npm run build    # -> public_html/
 - [ ] Patvirtinti, kurias procedūras atlieka (ypač homeopatija, ūkio gyvūnai, triušių vakcinacija)
 - [ ] Atvykimas į namus – teritorija, ar mokamas
 - [ ] Keliaujantiems – patikrinti šalių taisykles
-- [ ] Nauji blogo įrašai (dabar perkelti iš Ortovet, išvalyti nuo Ortovet faktų)
+- [ ] Perrašyti blogo įrašus: dabar rodoma tik įžanga (`preview: true` – noindex, ne sitemap'e). Parašius pilną tekstą – ištrinti `preview: true` iš failo
 - [ ] Kontaktų formos backend'as (dabar `mailto:`)

@@ -38,9 +38,9 @@ const postSchema = {
   articleSection: p.data.category,
 };
 ---
-<Base title={`${p.data.title} | Panemunės veterinarija`} description={p.data.description} type="article" published={p.data.date} schema={[postSchema, breadcrumbSchema(crumbs)]}>
+<Base title={`${p.data.title} | Panemunės veterinarija`} description={p.data.description} type="article" published={p.data.date} noindex={p.data.preview} schema={[postSchema, breadcrumbSchema(crumbs)]}>
   <PageHero title={p.data.title} eyebrow={p.data.category} crumbs={crumbs}>
-    <p class="meta"><Icon name="calendar" size={16} /> <time datetime={p.data.date}>{fmt}</time> · {p.data.readTime} skaitymo · {site.name}</p>
+    <p class="meta"><Icon name="calendar" size={16} /> <time datetime={p.data.date}>{fmt}</time>{!p.data.preview && <> · {p.data.readTime} skaitymo</>} · {site.name}</p>
   </PageHero>
 
   <section class="section">
@@ -49,6 +49,16 @@ const postSchema = {
         <p class="answer">{p.data.description}</p>
         <Image class="cover" src={photo} alt={p.data.title} widths={[640, 960]} sizes="(max-width: 900px) 100vw, 760px" loading="eager" />
         <div class="prose"><Content /></div>
+        {p.data.preview && (
+          <div class="soon">
+            <span class="icon-badge accent"><Icon name="calendar" /></span>
+            <div>
+              <h2>Pilna straipsnio versija ruošiama</h2>
+              <p>Šį straipsnį mūsų gydytojai šiuo metu papildo ir pritaiko Panemunės veterinarijos patirčiai. Netrukus čia rasite išsamų tekstą su praktiniais patarimais.</p>
+              <p class="muted">Turite klausimų jau dabar? Skambinkite <a href={site.mobile.href}>{site.mobile.display}</a>.</p>
+            </div>
+          </div>
+        )}
       </article>
       <aside class="side card">
         <h2>Reikia veterinaro?</h2>
@@ -79,6 +89,10 @@ const postSchema = {
 </Base>
 
 <style>
+  .soon { display: flex; gap: 18px; margin-top: 36px; padding: 26px 28px; background: #fff; border: 1px dashed var(--accent-dark); border-radius: var(--radius-lg); }
+  .soon h2 { font-size: 1.3rem; margin-bottom: 8px; }
+  .soon p { margin: 0 0 8px; }
+  .soon a { color: var(--primary); font-weight: 600; }
   .meta { display: flex; align-items: center; gap: 8px; color: var(--muted); margin: 8px 0 0; font-size: .95rem; }
   .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 56px; align-items: start; }
   article :global(.cover) { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 32px; box-shadow: var(--shadow); }
