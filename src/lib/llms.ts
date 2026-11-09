@@ -29,7 +29,6 @@ ${services.map((s) => `- [${s.title}](${u(`/paslaugos/${s.slug}/`)}): ${s.short}
 
 ## Veterinarinė vaistinė
 - [Vaistinė](${u('/vaistine/')}): veterinariniai ir homeopatiniai vaistai, pašarai, antiparazitinės ir priežiūros priemonės. Veikia kartu su klinika.
-- [Internetinė parduotuvė](${u('/parduotuve/')}): užsakymai telefonu ir el. paštu, atsiėmimas klinikoje.
 
 ## Kiti puslapiai
 - [Apie mus](${u('/apie-mus/')})

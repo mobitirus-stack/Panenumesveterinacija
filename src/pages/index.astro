@@ -62,11 +62,11 @@ const posts = (await getCollection('blog')).sort((a, b) => b.data.date.localeCom
           <p>Veterinariniai ir homeopatiniai vaistai, pašarai bei priežiūros priemonės – su specialisto patarimu.</p>
           <span class="more">Į vaistinę <Icon name="arrow" size={16} /></span>
         </a>
-        <a href="/parduotuve/" class="division card reveal">
-          <span class="icon-badge green"><Icon name="bag" /></span>
-          <h2>Internetinė parduotuvė</h2>
-          <p>Pašarai, antiparazitinės ir priežiūros priemonės. Užsisakykite telefonu ir atsiimkite klinikoje.</p>
-          <span class="more">Peržiūrėti prekes <Icon name="arrow" size={16} /></span>
+        <a href="/paslaugos/skubi-pagalba-24-7/" class="division card reveal">
+          <span class="icon-badge green"><Icon name="alert" /></span>
+          <h2>Skubi pagalba 24/7</h2>
+          <p>Skubiais atvejais atsiliepiame visą parą, o pageidaujant atvykstame ir į namus Kaune.</p>
+          <span class="more">Kada skambinti <Icon name="arrow" size={16} /></span>
         </a>
       </div>
     </div>
@@ -161,7 +161,7 @@ const posts = (await getCollection('blog')).sort((a, b) => b.data.date.localeCom
           <a href="/vaistine/#veterinariniai-vaistai" class="cat"><Icon name="pill" /><span>Veterinariniai vaistai</span></a>
           <a href="/vaistine/#homeopatiniai-vaistai" class="cat"><Icon name="leaf" /><span>Homeopatiniai vaistai</span></a>
         </div>
-        <div class="btn-row"><a href="/vaistine/" class="btn btn-primary btn-pill">Apie vaistinę</a><a href="/parduotuve/" class="btn btn-outline btn-pill">Internetinė parduotuvė</a></div>
+        <div class="btn-row"><a href="/vaistine/" class="btn btn-primary btn-pill">Apie vaistinę</a><a href="/kontaktai/" class="btn btn-outline btn-pill">Kaip atvykti</a></div>
       </div>
       <div class="pharmacy-media reveal">
         <Image src={img('vaistine')!} alt="Veterinarinės vaistinės lentynos su vaistais" widths={[480, 720]} sizes="(max-width: 900px) 100vw, 520px" />

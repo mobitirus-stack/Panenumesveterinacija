@@ -40,7 +40,6 @@ npm run build    # -> public_html/
 - [ ] Įmonės kodas, PVM kodas (poraštei ir schema)
 - [ ] Paslaugų kainos (`kainos.astro` – dabar „Teiraukitės“)
 - [ ] Vaistinės darbo laikas (jei skiriasi nuo klinikos)
-- [ ] Parduotuvės asortimentas ir kainos (`parduotuve.astro` – demo vitrina)
 - [ ] Patvirtinti, kurias procedūras atlieka (ypač homeopatija, ūkio gyvūnai, triušių vakcinacija)
 - [ ] Atvykimas į namus – teritorija, ar mokamas
 - [ ] Keliaujantiems – patikrinti šalių taisykles

@@ -35,7 +35,6 @@ export const nav = [
   { href: '/paslaugos/', label: 'Paslaugos' },
   { href: '/kainos/', label: 'Kainos' },
   { href: '/vaistine/', label: 'Vaistinė' },
-  { href: '/parduotuve/', label: 'Parduotuvė' },
   { href: '/galerija/', label: 'Galerija' },
   { href: '/blog/', label: 'Blogas' },
   { href: '/kontaktai/', label: 'Kontaktai' },
@@ -44,5 +43,4 @@ export const nav = [
 export const topbar = [
   { href: '/', label: 'Veterinarijos klinika', short: 'Klinika' },
   { href: '/vaistine/', label: 'Veterinarinė vaistinė', short: 'Vaistinė' },
-  { href: '/parduotuve/', label: 'Internetinė parduotuvė', short: 'Parduotuvė' },
 ];

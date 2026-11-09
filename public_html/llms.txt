@@ -35,7 +35,6 @@
 
 ## Veterinarinė vaistinė
 - [Vaistinė](https://www.panemunesveterinarija.lt/vaistine/): veterinariniai ir homeopatiniai vaistai, pašarai, antiparazitinės ir priežiūros priemonės. Veikia kartu su klinika.
-- [Internetinė parduotuvė](https://www.panemunesveterinarija.lt/parduotuve/): užsakymai telefonu ir el. paštu, atsiėmimas klinikoje.
 
 ## Kiti puslapiai
 - [Apie mus](https://www.panemunesveterinarija.lt/apie-mus/)

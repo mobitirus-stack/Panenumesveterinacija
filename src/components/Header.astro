@@ -5,7 +5,7 @@ import { site, nav, topbar } from '../data/site';
 const path = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 const topActive = (href: string) =>
-  href === '/' ? !path.startsWith('/vaistine') && !path.startsWith('/parduotuve') : path.startsWith(href);
+  href === '/' ? !path.startsWith('/vaistine') : path.startsWith(href);
 ---
 <header class="site-header">
   <div class="topbar">
