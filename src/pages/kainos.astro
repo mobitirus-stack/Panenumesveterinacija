@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+import { services, groups } from '../data/services';
+import { breadcrumbSchema, faqSchema } from '../lib/schema';
+
+// TODO: gauti tikras kainas iš kliento ir įrašyti vietoje „Teiraukitės“.
+const crumbs = [{ name: 'Pradžia', href: '/' }, { name: 'Kainos', href: '/kainos/' }];
+const faq = [
+  { q: 'Kiek kainuoja veterinaro konsultacija Panemunės veterinarijoje?', a: 'Konsultacijos kainą pasakysime telefonu 8 37 207 134 – ji priklauso nuo vizito tipo ir gyvūno.' },
+  { q: 'Kodėl kainos nurodomos individualiai?', a: 'Daugelio procedūrų kaina priklauso nuo gyvūno rūšies, svorio, būklės ir reikalingų medžiagų, todėl tikslią kainą pateikiame po apžiūros arba telefonu.' },
+  { q: 'Ar skubi pagalba naktį kainuoja daugiau?', a: 'Skubios pagalbos ne darbo valandomis kaina gali skirtis. Paskambinę +370 673 36367 sužinosite iš anksto.' },
+];
+---
+<Base
+  title="Veterinarijos paslaugų kainos Kaune | Panemunės veterinarija"
+  description="Panemunės veterinarijos paslaugų kainos: vakcinacija, čipavimas, tyrimai, sterilizacija, dantų valymas, chirurgija. Tikslią kainą sužinokite telefonu 8 37 207 134."
+  schema={[breadcrumbSchema(crumbs), faqSchema(faq)]}
+>
+  <PageHero title="Paslaugų kainos" eyebrow="Kainos" lead="Kainos priklauso nuo gyvūno rūšies, dydžio ir būklės. Tikslią kainą pasakysime telefonu arba konsultacijos metu." crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container narrow">
+      <p class="answer">Panemunės veterinarijos paslaugų kainas sužinosite paskambinę {site.phone.display} arba {site.mobile.display}. Prieš procedūrą visada aptariame preliminarią kainą, kad nebūtų netikėtumų.</p>
+      {groups.map((g) => {
+        const list = services.filter((s) => s.group === g);
+        return (
+          <div class="price-group card">
+            <h2>{g}</h2>
+            <table>
+              <tbody>
+                {list.map((s) => (
+                  <tr>
+                    <th scope="row"><a href={`/paslaugos/${s.slug}/`}>{s.title}</a></th>
+                    <td>Teiraukitės</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
+      <p class="muted note"><Icon name="alert" size={16} /> Kainos nurodomos individualiai. Vaistai, tyrimai ir medžiagos gali būti skaičiuojami atskirai.</p>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container narrow">
+      <h2>Dažni klausimai apie kainas</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+
+  <section class="section tight"><div class="container"><CtaBand title="Sužinokite kainą telefonu" text="Atsakysime į klausimus ir užregistruosime vizitui." /></div></section>
+</Base>
+
+<style>
+  .narrow { max-width: 900px; }
+  .price-group { padding: 24px 28px; margin-bottom: 20px; }
+  .price-group h2 { font-size: 1.3rem; margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 12px 0; border-top: 1px solid var(--border); }
+  th { text-align: left; font-weight: 500; }
+  th a:hover { color: var(--primary); }
+  td { text-align: right; font-weight: 600; color: var(--primary); white-space: nowrap; }
+  .note { display: flex; gap: 8px; align-items: center; font-size: .92rem; }
+</style>

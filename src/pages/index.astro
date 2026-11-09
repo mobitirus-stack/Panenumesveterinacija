@@ -1,0 +1,280 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import Faq from '../components/Faq.astro';
+import ContactSection from '../components/ContactSection.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+import { services } from '../data/services';
+import { generalFaq } from '../data/faq';
+import { faqSchema } from '../lib/schema';
+import { img } from '../lib/images';
+
+const featured = ['vakcinacija', 'chirurgija', 'laboratoriniai-tyrimai', 'dantu-prieziura', 'odos-ir-ausu-ligos', 'skubi-pagalba-24-7'];
+const featuredServices = featured.map((s) => services.find((x) => x.slug === s)!);
+const otherServices = services.filter((s) => !featured.includes(s.slug));
+const posts = (await getCollection('blog')).sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
+---
+<Base
+  title="Veterinarijos klinika Kaune, Panemunėje | Panemunės veterinarija"
+  description="Panemunės veterinarija – veterinarijos klinika ir vaistinė Kaune, Vaidoto g. 97. Vakcinacija, chirurgija, tyrimai, dantų priežiūra. Skubi pagalba visą parą."
+  schema={[faqSchema(generalFaq)]}
+>
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <h1><span class="hero-eyebrow">Veterinarijos klinika Kaune, Panemunėje</span><span class="slogan">Rūpinamės jūsų augintiniu kaip savo šeimos nariu</span></h1>
+        <p class="hero-lead">Profilaktika, gydymas, chirurgija ir veterinarinė vaistinė vienoje vietoje. Skubiais atvejais – pagalba visą parą, galime atvykti ir į namus.</p>
+        <div class="btn-row">
+          <a href={site.mobile.href} class="btn btn-primary"><Icon name="phone" size={18} /> Skambinti dabar</a>
+          <a href="/kontaktai/" class="btn btn-outline"><Icon name="calendar" size={18} /> Registruotis</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <div class="hero-blob"></div>
+        <Image src={img('hero')!} alt="Šuo ir katė – Panemunės veterinarijos pacientai" widths={[480, 760, 1100]} sizes="(max-width: 900px) 90vw, 560px" loading="eager" fetchpriority="high" />
+      </div>
+    </div>
+    <div class="container">
+      <div class="quick">
+        <div class="quick-item"><span class="icon-badge"><Icon name="clock" /></span><div><strong>Darbo laikas</strong><span>I–V 10:00–19:00 · VI 9:00–15:00</span></div></div>
+        <a class="quick-item" href={site.mobile.href}><span class="icon-badge accent"><Icon name="alert" /></span><div><strong>Skubi pagalba 24/7</strong><span>{site.mobile.display}</span></div></a>
+        <a class="quick-item" href="/kontaktai/"><span class="icon-badge green"><Icon name="pin" /></span><div><strong>{site.address.street}</strong><span>Kaunas, Panemunė</span></div></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <div class="grid grid-3 divisions">
+        <a href="/paslaugos/" class="division card reveal">
+          <span class="icon-badge"><Icon name="stethoscope" /></span>
+          <h2>Veterinarijos klinika</h2>
+          <p>Profilaktika, diagnostika, chirurgija ir gydymas šunims, katėms, triušiams ir kitiems augintiniams.</p>
+          <span class="more">Paslaugos <Icon name="arrow" size={16} /></span>
+        </a>
+        <a href="/vaistine/" class="division card reveal">
+          <span class="icon-badge accent"><Icon name="pill" /></span>
+          <h2>Veterinarinė vaistinė</h2>
+          <p>Veterinariniai ir homeopatiniai vaistai, pašarai bei priežiūros priemonės – su specialisto patarimu.</p>
+          <span class="more">Į vaistinę <Icon name="arrow" size={16} /></span>
+        </a>
+        <a href="/parduotuve/" class="division card reveal">
+          <span class="icon-badge green"><Icon name="bag" /></span>
+          <h2>Internetinė parduotuvė</h2>
+          <p>Pašarai, antiparazitinės ir priežiūros priemonės. Užsisakykite telefonu ir atsiimkite klinikoje.</p>
+          <span class="more">Peržiūrėti prekes <Icon name="arrow" size={16} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="paslaugos">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Pagrindinės paslaugos</span>
+        <h2>Visapusiška priežiūra jūsų augintiniui</h2>
+        <p class="lead">Nuo pirmųjų šuniuko skiepų iki operacijų ir senjoro priežiūros – viskas vienoje klinikoje Panemunėje.</p>
+      </div>
+      <div class="grid grid-3">
+        {featuredServices.map((s) => <ServiceCard s={s} />)}
+      </div>
+      <div class="other card reveal">
+        <h3>Taip pat teikiame</h3>
+        <div class="chips">
+          {otherServices.map((s) => <a class="chip" href={`/paslaugos/${s.slug}/`}>{s.title}</a>)}
+        </div>
+      </div>
+      <div class="btn-row" style="justify-content:center;margin-top:32px">
+        <a href="/paslaugos/" class="btn btn-outline btn-pill">Visos klinikos paslaugos</a>
+        <a href={site.mobile.href} class="btn btn-primary btn-pill">Registruotis į priėmimą</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="apie-mus">
+    <div class="container about">
+      <div class="about-media reveal">
+        <Image src={img('apie-mus')!} alt="Veterinarijos gydytoja apžiūri katę" widths={[480, 720]} sizes="(max-width: 900px) 100vw, 540px" />
+        <div class="stat"><strong>24/7</strong><span>Skubūs iškvietimai</span></div>
+      </div>
+      <div class="about-text reveal">
+        <span class="eyebrow green">Apie veterinarijos kliniką</span>
+        <h2>Jūsų veterinarai <span class="text-primary">Panemunėje</span></h2>
+        <p>UAB „Panemunės veterinarija“ – veterinarijos klinika ir veterinarinė vaistinė Kaune, Panemunės mikrorajone. Mūsų gydytojų patirtis ir specializacija – smulkiųjų naminių gyvūnų gydymas ir profilaktika.</p>
+        <p>Gydome šunis, kates, šinšilas, triušius bei kitus graužikus, o esant poreikiui konsultuojame ir gydome stambius ūkio gyvūnus. Dirbame bet kuriuo paros metu skubiais atvejais, o pageidaujant atvykstame ir į namus.</p>
+        <ul class="check-list">
+          <li>Klinika ir vaistinė vienoje vietoje – vaistus ir pašarą įsigysite iš karto</li>
+          <li>Skubi pagalba visą parą telefonu {site.mobile.display}</li>
+          <li>Iškvietimai į namus Kaune</li>
+          <li>Aiškūs paaiškinimai ir individualus gydymo planas</li>
+        </ul>
+        <a href="/apie-mus/" class="btn btn-primary btn-pill" style="margin-top:28px">Daugiau apie mus</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Kodėl mes</span>
+        <h2>Ramybė jums, priežiūra augintiniui</h2>
+      </div>
+      <div class="grid grid-4">
+        <div class="feature card reveal"><span class="icon-badge"><Icon name="alert" /></span><h3>Pagalba visą parą</h3><p>Skubiais atvejais atsiliepiame ir padedame bet kuriuo paros metu.</p></div>
+        <div class="feature card reveal"><span class="icon-badge accent"><Icon name="home" /></span><h3>Atvykstame į namus</h3><p>Patogu vyresniems ir jautriems gyvūnams – be streso kelionėje.</p></div>
+        <div class="feature card reveal"><span class="icon-badge green"><Icon name="pill" /></span><h3>Vaistinė vietoje</h3><p>Paskirtus vaistus, pašarą ir priemones įsigysite iškart po vizito.</p></div>
+        <div class="feature card reveal"><span class="icon-badge"><Icon name="rabbit" /></span><h3>Ne tik šunys ir katės</h3><p>Gydome triušius, šinšilas, graužikus ir konsultuojame dėl ūkio gyvūnų.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="komanda">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Komanda</span>
+        <h2>Patyrę veterinarai</h2>
+        <p class="lead">Mūsų gydytojai specializuojasi smulkiųjų naminių gyvūnų gydyme ir profilaktikoje.</p>
+      </div>
+      <div class="grid grid-3">
+        {[1, 2, 3].map(() => (
+          <div class="team card reveal">
+            <div class="team-photo"><Icon name="user" size={72} /><span>Nuotrauka netrukus</span></div>
+            <div class="team-body"><h3>Veterinarijos gydytojas</h3><p class="muted">Smulkiųjų gyvūnų gydymas ir profilaktika</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container pharmacy">
+      <div class="reveal">
+        <span class="eyebrow">Veterinarinė vaistinė</span>
+        <h2>Vaistai ir pašarai – su specialisto patarimu</h2>
+        <p class="lead">Mūsų veterinarijos vaistinė – vieta, kur dėmesingas specialistas pasiūlys jūsų augintiniui tinkamiausią maistą ar reikalingus vaistus.</p>
+        <div class="grid grid-3 cats">
+          <a href="/vaistine/#maistas" class="cat"><Icon name="bowl" /><span>Maistas</span></a>
+          <a href="/vaistine/#veterinariniai-vaistai" class="cat"><Icon name="pill" /><span>Veterinariniai vaistai</span></a>
+          <a href="/vaistine/#homeopatiniai-vaistai" class="cat"><Icon name="leaf" /><span>Homeopatiniai vaistai</span></a>
+        </div>
+        <div class="btn-row"><a href="/vaistine/" class="btn btn-primary btn-pill">Apie vaistinę</a><a href="/parduotuve/" class="btn btn-outline btn-pill">Internetinė parduotuvė</a></div>
+      </div>
+      <div class="pharmacy-media reveal">
+        <Image src={img('vaistine')!} alt="Veterinarinės vaistinės lentynos su vaistais" widths={[480, 720]} sizes="(max-width: 900px) 100vw, 520px" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="blog">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Blogas</span>
+        <h2>Naudinga informacija augintinių šeimininkams</h2>
+      </div>
+      <div class="grid grid-3">
+        {posts.map((p) => (
+          <a href={`/blog/${p.id}/`} class="post card reveal">
+            <Image src={img(p.data.image)!} alt={p.data.title} widths={[400, 640]} sizes="(max-width: 640px) 100vw, 380px" />
+            <div class="post-body">
+              <span class="chip">{p.data.category}</span>
+              <h3>{p.data.title}</h3>
+              <p class="muted">{p.data.description}</p>
+              <span class="more">Skaityti <Icon name="arrow" size={16} /></span>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div class="center" style="margin-top:32px"><a href="/blog/" class="btn btn-outline btn-pill">Visi straipsniai</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container faq-wrap">
+      <div>
+        <span class="eyebrow">DUK</span>
+        <h2>Dažniausiai užduodami klausimai</h2>
+        <p class="lead">Neradote atsakymo? Paskambinkite – mielai patarsime.</p>
+        <a href={site.phone.href} class="btn btn-primary btn-pill"><Icon name="phone" size={16} /> {site.phone.display}</a>
+      </div>
+      <Faq items={generalFaq} />
+    </div>
+  </section>
+
+  <ContactSection />
+
+  <section class="section tight" style="padding-top:0">
+    <div class="container"><CtaBand /></div>
+  </section>
+</Base>
+
+<style>
+  .hero { background: var(--surface); padding: calc(var(--header-h) + 40px) 0 48px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(60% 70% at 85% 30%, rgba(207,149,223,.22), transparent 70%); }
+  .hero-inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: center; position: relative; }
+  .hero-eyebrow { display: block; color: var(--primary); font-weight: 600; font-size: 1.05rem; letter-spacing: 0; margin-bottom: 18px; }
+  .slogan { color: var(--accent); }
+  .hero-lead { font-size: 1.15rem; color: var(--muted); max-width: 540px; margin-bottom: 32px; }
+  .hero-media { position: relative; }
+  .hero-media :global(img) { position: relative; width: 100%; max-width: 600px; margin: 0 auto; filter: drop-shadow(0 30px 40px rgba(19,71,134,.15)); }
+  .hero-blob { position: absolute; inset: 10% 8% 0; border-radius: 50%; background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0) 70%); }
+  .quick { position: relative; margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .quick-item { display: flex; gap: 14px; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow); }
+  .quick-item strong { display: block; }
+  .quick-item span:not(.icon-badge) { color: var(--muted); font-size: .95rem; }
+  a.quick-item:hover { border-color: var(--primary); }
+
+  .division { padding: 30px; display: flex; flex-direction: column; gap: 14px; transition: transform .25s, box-shadow .25s; }
+  .division:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .division h2 { font-size: 1.4rem; margin: 6px 0 0; }
+  .division p { color: var(--muted); margin: 0; }
+  .more { margin-top: auto; display: inline-flex; gap: 6px; align-items: center; color: var(--primary); font-weight: 600; }
+
+  .other { margin-top: 28px; padding: 24px 28px; }
+  .other h3 { font-size: 1.05rem; }
+  .other .chip:hover { border-color: var(--primary); color: var(--primary); }
+
+  .about { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .about-media { position: relative; }
+  .about-media :global(img) { border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; aspect-ratio: 4/3.4; object-fit: cover; }
+  .stat { position: absolute; right: -20px; bottom: -24px; background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 18px 22px; display: flex; flex-direction: column; }
+  .stat strong { font-size: 2.2rem; color: var(--primary); line-height: 1; }
+  .stat span { font-size: .85rem; color: var(--muted); }
+
+  .feature { padding: 28px; }
+  .feature h3 { margin-top: 18px; font-size: 1.15rem; }
+  .feature p { color: var(--muted); margin: 0; font-size: .97rem; }
+
+  .team { overflow: hidden; }
+  .team-photo { aspect-ratio: 4/3.6; background: linear-gradient(160deg, var(--primary-soft), #f6eafa); display: grid; place-items: center; align-content: center; gap: 10px; color: rgba(19,71,134,.35); }
+  .team-photo span { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .team-body { padding: 20px 24px; }
+  .team-body h3 { margin-bottom: 4px; }
+  .team-body p { margin: 0; }
+
+  .pharmacy { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+  .pharmacy-media :global(img) { border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; aspect-ratio: 4/3.2; object-fit: cover; }
+  .cats { margin: 24px 0 28px; gap: 12px; }
+  .cat { display: flex; flex-direction: column; gap: 8px; padding: 18px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); color: var(--primary); font-weight: 600; font-size: .95rem; transition: border-color .2s; }
+  .cat:hover { border-color: var(--primary); }
+
+  .post { overflow: hidden; display: flex; flex-direction: column; transition: transform .25s, box-shadow .25s; }
+  .post:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .post :global(img) { aspect-ratio: 16/10; object-fit: cover; width: 100%; }
+  .post-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .post-body h3 { margin: 4px 0 0; font-size: 1.15rem; }
+  .post-body p { margin: 0; font-size: .95rem; }
+  .post .chip { align-self: flex-start; }
+
+  .faq-wrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 56px; align-items: start; }
+
+  @media (max-width: 900px) {
+    .hero-inner, .about, .pharmacy, .faq-wrap { grid-template-columns: 1fr; gap: 36px; }
+    .hero-media { order: -1; max-width: 460px; margin: 0 auto; }
+    .quick { grid-template-columns: 1fr; }
+    .stat { right: 12px; }
+  }
+</style>

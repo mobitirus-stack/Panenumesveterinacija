@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { breadcrumbSchema, abs, ORG_ID } from '../../lib/schema';
+import { img } from '../../lib/images';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.date.localeCompare(a.data.date));
+const crumbs = [{ name: 'Pradžia', href: '/' }, { name: 'Blogas', href: '/blog/' }];
+const blogSchema = {
+  '@type': 'Blog',
+  name: 'Panemunės veterinarijos blogas',
+  url: abs('/blog/'),
+  publisher: { '@id': ORG_ID },
+  blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.data.title, url: abs(`/blog/${p.id}/`), datePublished: p.data.date })),
+};
+const fmt = (d: string) => new Date(d).toLocaleDateString('lt-LT', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<Base
+  title="Blogas augintinių šeimininkams | Panemunės veterinarija"
+  description="Veterinarų patarimai augintinių šeimininkams: vakcinacija, erkės, kirmėlės, mityba, dantų priežiūra, sterilizacija, skubi pagalba ir senyvų gyvūnų priežiūra."
+  schema={[breadcrumbSchema(crumbs), blogSchema]}
+>
+  <PageHero title="Naudinga informacija augintinių šeimininkams" eyebrow="Blogas" lead="Praktiški veterinarų patarimai apie augintinių sveikatą, profilaktiką ir priežiūrą." crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-3">
+        {posts.map((p, i) => (
+          <a href={`/blog/${p.id}/`} class="post card reveal">
+            <Image src={img(p.data.image)!} alt={p.data.title} widths={[400, 640]} sizes="(max-width: 640px) 100vw, 380px" loading={i < 3 ? 'eager' : 'lazy'} />
+            <div class="post-body">
+              <div class="meta"><span class="chip">{p.data.category}</span><span class="muted">{p.data.readTime}</span></div>
+              <h2>{p.data.title}</h2>
+              <p class="muted">{p.data.description}</p>
+              <div class="foot"><time datetime={p.data.date} class="muted">{fmt(p.data.date)}</time><span class="more">Skaityti <Icon name="arrow" size={16} /></span></div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:0">
+    <div class="container"><CtaBand /></div>
+  </section>
+</Base>
+
+<style>
+  .post { overflow: hidden; display: flex; flex-direction: column; transition: transform .25s, box-shadow .25s; }
+  .post:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .post :global(img) { aspect-ratio: 16/10; object-fit: cover; width: 100%; }
+  .post-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .post-body h2 { font-size: 1.18rem; margin: 4px 0 0; }
+  .post-body p { margin: 0; font-size: .95rem; }
+  .meta, .foot { display: flex; justify-content: space-between; align-items: center; font-size: .88rem; }
+  .foot { margin-top: auto; padding-top: 8px; }
+  .more { display: inline-flex; gap: 6px; align-items: center; color: var(--primary); font-weight: 600; }
+</style>

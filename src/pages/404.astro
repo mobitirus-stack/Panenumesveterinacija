@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+---
+<Base title="Puslapis nerastas | Panemunės veterinarija" description="Puslapis nerastas." noindex>
+  <section class="section nf">
+    <div class="container center">
+      <p class="code">404</p>
+      <h1>Puslapis nerastas</h1>
+      <p class="lead">Atrodo, šis puslapis pabėgo kaip smalsus šuniukas. Grįžkite į pradžią arba susisiekite.</p>
+      <div class="btn-row">
+        <a href="/" class="btn btn-primary btn-pill">Į pradžią</a>
+        <a href="/paslaugos/" class="btn btn-outline btn-pill">Paslaugos</a>
+        <a href={site.mobile.href} class="btn btn-outline btn-pill"><Icon name="phone" size={16} /> {site.mobile.display}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { padding-top: calc(var(--header-h) + 80px); min-height: 70vh; }
+  .code { font-size: 6rem; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 12px; }
+  h1 { font-size: 2.4rem; font-weight: 700; }
+</style>

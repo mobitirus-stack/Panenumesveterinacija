@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactSection from '../components/ContactSection.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { generalFaq } from '../data/faq';
+import { breadcrumbSchema, faqSchema, ORG_ID, abs } from '../lib/schema';
+
+const crumbs = [{ name: 'Pradžia', href: '/' }, { name: 'Kontaktai', href: '/kontaktai/' }];
+const contactSchema = { '@type': 'ContactPage', url: abs('/kontaktai/'), name: 'Panemunės veterinarijos kontaktai', about: { '@id': ORG_ID } };
+---
+<Base
+  title="Kontaktai – Vaidoto g. 97, Kaunas | Panemunės veterinarija"
+  description="Panemunės veterinarija: Vaidoto g. 97, Kaunas. Tel. 8 37 207 134, mob. +370 673 36367 (24/7), info@panemunesveterinarija.lt. I–V 10–19, VI 9–15."
+  schema={[breadcrumbSchema(crumbs), faqSchema(generalFaq), contactSchema]}
+>
+  <PageHero title="Kontaktai" eyebrow="Kontaktai" lead={`Panemunės veterinarija – ${site.address.full}. Registracija telefonu, skubiais atvejais – visą parą.`} crumbs={crumbs} />
+
+  <ContactSection showHead={false} />
+
+  <section class="section alt">
+    <div class="container form-wrap">
+      <div>
+        <span class="eyebrow">Parašykite mums</span>
+        <h2>Turite klausimų?</h2>
+        <p class="lead">Užpildykite formą ir atsakysime kuo greičiau. Skubiais atvejais – skambinkite {site.mobile.display}.</p>
+        <ul class="check-list">
+          <li>Atsakome darbo valandomis</li>
+          <li>Skype: {site.skype}</li>
+          <li><a href={site.facebook} target="_blank" rel="noopener">Facebook puslapis</a></li>
+        </ul>
+      </div>
+      <form class="card form" id="contact-form">
+        <label>Vardas, pavardė<input name="vardas" required autocomplete="name" /></label>
+        <div class="two">
+          <label>El. paštas<input name="email" type="email" autocomplete="email" /></label>
+          <label>Telefonas<input name="tel" type="tel" autocomplete="tel" /></label>
+        </div>
+        <label>Jūsų klausimas<textarea name="klausimas" rows="5" required></textarea></label>
+        <button class="btn btn-primary" type="submit"><Icon name="mail" size={16} /> Siųsti</button>
+        <p class="small muted">Paspaudus „Siųsti“ atsidarys jūsų el. pašto programa su užpildytu laišku.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <h2>Dažni klausimai</h2>
+      <Faq items={generalFaq} />
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Demo: forma be backend'o – sukuria mailto laišką.
+  document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target as HTMLFormElement);
+    const body = `Vardas: ${f.get('vardas')}\nEl. paštas: ${f.get('email')}\nTelefonas: ${f.get('tel')}\n\n${f.get('klausimas')}`;
+    location.href = `mailto:info@panemunesveterinarija.lt?subject=${encodeURIComponent('Klausimas iš svetainės')}&body=${encodeURIComponent(body)}`;
+  });
+</script>
+
+<style>
+  .form-wrap { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: start; }
+  .form-wrap a { color: var(--primary); text-decoration: underline; }
+  .form { padding: 32px; display: grid; gap: 16px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  label { display: grid; gap: 6px; font-weight: 600; font-size: .92rem; }
+  input, textarea { font: inherit; font-weight: 400; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
+  input:focus, textarea:focus { outline: 2px solid var(--primary); border-color: transparent; }
+  .small { font-size: .85rem; margin: 0; }
+  .narrow { max-width: 860px; }
+  @media (max-width: 900px) { .form-wrap, .two { grid-template-columns: 1fr; } }
+</style>

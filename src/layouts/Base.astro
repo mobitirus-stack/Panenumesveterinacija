@@ -1,0 +1,90 @@
+---
+import '@fontsource-variable/outfit';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { clinicSchema, pharmacySchema, websiteSchema, abs } from '../lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  schema?: object[];
+  noindex?: boolean;
+  published?: string;
+}
+const { title: rawTitle, description, image = '/og-image.jpg', type = 'website', schema = [], noindex = false, published } = Astro.props;
+// Per ilgiems (>65 simb.) title nuimama prekės ženklo galūnė, kad neapkarpytų Google.
+const title = rawTitle.length > 65 && rawTitle.includes(' | ') ? rawTitle.split(' | ')[0] : rawTitle;
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const ogImage = abs(image);
+const graph = { '@context': 'https://schema.org', '@graph': [clinicSchema(), pharmacySchema(), websiteSchema(), ...schema] };
+---
+<!doctype html>
+<html lang="lt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="lt-LT" href={canonical} />
+    <meta name="robots" content={noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'} />
+    <meta name="theme-color" content="#134786" />
+    <meta name="author" content={site.name} />
+    <meta name="geo.region" content="LT-KU" />
+    <meta name="geo.placename" content="Kaunas" />
+    <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />
+    <meta name="ICBM" content={`${site.geo.lat}, ${site.geo.lng}`} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="lt_LT" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {published && <meta property="article:published_time" content={published} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+  </head>
+  <body>
+    <a class="sr-only" href="#turinys">Pereiti prie turinio</a>
+    <Header />
+    <main id="turinys">
+      <slot />
+    </main>
+    <Footer />
+
+    <a class="float-call" href={site.mobile.href} aria-label={`Skambinti ${site.mobile.display}`}>
+      <Icon name="phone" size={18} />
+      <span>{site.mobile.display}</span>
+    </a>
+
+    <script>
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
+
+<style>
+  .float-call { position: fixed; right: 20px; bottom: 20px; z-index: 40; display: inline-flex; align-items: center; gap: 10px; background: var(--green); color: #fff; font-weight: 600; padding: 13px 20px; border-radius: 999px; box-shadow: 0 12px 28px rgba(44, 154, 99, .35); transition: transform .2s; }
+  .float-call:hover { transform: translateY(-2px); }
+  @media (max-width: 640px) { .float-call span { display: none; } .float-call { padding: 16px; } }
+</style>

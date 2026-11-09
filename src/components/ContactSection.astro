@@ -1,0 +1,69 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+interface Props { heading?: string; level?: 'h1' | 'h2'; showHead?: boolean }
+const { heading = 'Veterinaras Panemunėje – susisiekite', showHead = true } = Astro.props;
+---
+<section class="section" id="kontaktai">
+  <div class="container">
+    {showHead && (
+      <div class="section-head center">
+        <span class="eyebrow">Kontaktai</span>
+        <h2>{heading}</h2>
+        <p class="lead">Klinika ir veterinarinė vaistinė įsikūrusios Kaune, Panemunėje – {site.address.street}. Skubiais atvejais skambinkite bet kuriuo paros metu.</p>
+      </div>
+    )}
+    <div class="contact-grid">
+      <div class="info card">
+        <div class="row">
+          <span class="icon-badge"><Icon name="pin" /></span>
+          <div><strong>Adresas</strong><p>{site.address.full}<br /><span class="muted">Panemunės mikrorajonas</span></p>
+            <a class="link" href={site.mapLink} target="_blank" rel="noopener">Gauti maršrutą <Icon name="arrow" size={15} /></a></div>
+        </div>
+        <div class="row">
+          <span class="icon-badge"><Icon name="phone" /></span>
+          <div><strong>Telefonai</strong>
+            <p><a href={site.phone.href}>{site.phone.display}</a> <span class="muted">– registracija</span><br />
+            <a href={site.mobile.href}>{site.mobile.display}</a> <span class="muted">– mob., skubi pagalba 24/7</span></p></div>
+        </div>
+        <div class="row">
+          <span class="icon-badge"><Icon name="mail" /></span>
+          <div><strong>El. paštas</strong><p><a href={`mailto:${site.email}`}>{site.email}</a></p></div>
+        </div>
+        <div class="row">
+          <span class="icon-badge"><Icon name="clock" /></span>
+          <div><strong>Darbo laikas</strong>
+            <table class="hours">
+              <tbody>{site.hours.map((h) => <tr><th scope="row">{h.label}</th><td>{h.time}</td></tr>)}</tbody>
+            </table>
+            <p class="urgent"><Icon name="alert" size={16} /> Skubūs iškvietimai – visą parą. Galime atvykti ir į namus.</p>
+          </div>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={site.mobile.href}><Icon name="phone" size={16} /> Skambinti</a>
+          <a class="btn btn-outline" href={`mailto:${site.email}`}><Icon name="mail" size={16} /> Rašyti</a>
+        </div>
+      </div>
+      <div class="map card">
+        <iframe title="Panemunės veterinarija žemėlapyje – Vaidoto g. 97, Kaunas" src={site.mapEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; }
+  .info { padding: 32px; display: grid; gap: 24px; align-content: start; }
+  .row { display: flex; gap: 16px; }
+  .row strong { display: block; margin-bottom: 4px; }
+  .row p { margin: 0; }
+  .row a:not(.link):hover { color: var(--primary); }
+  .link { display: inline-flex; gap: 6px; align-items: center; margin-top: 8px; color: var(--primary); font-weight: 600; font-size: .95rem; }
+  .hours { border-collapse: collapse; margin: 2px 0 8px; }
+  .hours th { text-align: left; font-weight: 400; color: var(--muted); padding: 2px 20px 2px 0; }
+  .hours td { font-weight: 600; }
+  .urgent { display: flex; gap: 8px; align-items: center; color: var(--accent-dark); font-weight: 600; font-size: .95rem; }
+  .map { overflow: hidden; min-height: 460px; }
+  .map iframe { width: 100%; height: 100%; min-height: 460px; border: 0; display: block; }
+  @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } .map, .map iframe { min-height: 340px; } .info { padding: 24px; } }
+</style>

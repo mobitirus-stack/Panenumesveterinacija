@@ -1,0 +1,66 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { services } from '../data/services';
+const year = new Date().getFullYear();
+const top = services.slice(0, 8);
+---
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a href="/" aria-label={site.name}><Logo light /></a>
+      <p class="about">Veterinarijos klinika ir veterinarinė vaistinė Kaune, Panemunėje. Gydome šunis, kates, triušius, šinšilas ir kitus augintinius.</p>
+      <a class="social" href={site.facebook} target="_blank" rel="noopener" aria-label="Panemunės veterinarija Facebook"><Icon name="facebook" size={18} /></a>
+    </div>
+    <div>
+      <h2 class="f-title">Paslaugos</h2>
+      <ul>
+        {top.map((s) => <li><a href={`/paslaugos/${s.slug}/`}>{s.title}</a></li>)}
+        <li><a href="/paslaugos/">Visos paslaugos →</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="f-title">Informacija</h2>
+      <ul>
+        <li><a href="/apie-mus/">Apie mus</a></li>
+        <li><a href="/vaistine/">Veterinarinė vaistinė</a></li>
+        <li><a href="/parduotuve/">Internetinė parduotuvė</a></li>
+        <li><a href="/kainos/">Kainos</a></li>
+        <li><a href="/keliaujantiems/">Keliaujantiems</a></li>
+        <li><a href="/galerija/">Galerija</a></li>
+        <li><a href="/blog/">Blogas</a></li>
+        <li><a href="/kontaktai/">Kontaktai</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="f-title">Kontaktai</h2>
+      <ul class="contact">
+        <li><Icon name="pin" size={18} /><span>{site.address.full}<br /><small>Panemunė</small></span></li>
+        <li><Icon name="phone" size={18} /><span><a href={site.phone.href}>{site.phone.display}</a><br /><a href={site.mobile.href}>{site.mobile.display}</a> <small>(24/7)</small></span></li>
+        <li><Icon name="mail" size={18} /><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><Icon name="clock" size={18} /><span>{site.hours.map((h) => <>{h.short}: {h.time}<br /></>)}<small>Skubiai – visą parą</small></span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container bottom">
+    <span>© {year} {site.legalName}. Visos teisės saugomos.</span>
+    <span>Vaidoto g. 97, Kaunas · <a href="/kontaktai/">Kaip mus rasti</a></span>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--primary); color: rgba(255,255,255,.85); padding: 72px 0 28px; font-size: .96rem; }
+  .footer-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.3fr; gap: 40px; }
+  .about { margin: 20px 0; max-width: 300px; }
+  .f-title { color: #fff; font-size: 1.05rem; font-weight: 600; margin-bottom: 18px; }
+  ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; }
+  a:hover { color: var(--accent); }
+  .contact li { display: flex; gap: 12px; align-items: flex-start; }
+  .contact :global(svg) { margin-top: 3px; flex-shrink: 0; color: var(--accent); }
+  small { opacity: .85; }
+  .social { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.12); color: #fff; }
+  .bottom { margin-top: 56px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.15); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: .86rem; opacity: .92; }
+  @media (max-width: 960px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
+</style>

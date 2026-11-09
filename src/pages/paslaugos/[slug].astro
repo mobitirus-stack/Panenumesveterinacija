@@ -1,0 +1,156 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import { services, serviceBySlug, type Service } from '../../data/services';
+import { site } from '../../data/site';
+import { breadcrumbSchema, faqSchema, ORG_ID, abs } from '../../lib/schema';
+import { img } from '../../lib/images';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props as { s: Service };
+const crumbs = [
+  { name: 'Pradžia', href: '/' },
+  { name: 'Paslaugos', href: '/paslaugos/' },
+  { name: s.title, href: `/paslaugos/${s.slug}/` },
+];
+const photo = img(s.image);
+const related = s.related.map((r) => serviceBySlug[r]).filter(Boolean);
+const allPosts = await getCollection('blog');
+const posts = (s.blog ?? []).map((b) => allPosts.find((p) => p.id === b)).filter(Boolean);
+const serviceSchema = {
+  '@type': 'Service',
+  '@id': abs(`/paslaugos/${s.slug}/#service`),
+  name: s.title,
+  serviceType: s.title,
+  description: s.answer,
+  url: abs(`/paslaugos/${s.slug}/`),
+  provider: { '@id': ORG_ID },
+  areaServed: { '@type': 'City', name: 'Kaunas' },
+  audience: { '@type': 'Audience', audienceType: 'Augintinių šeimininkai' },
+  ...(photo ? { image: abs(photo.src) } : {}),
+};
+---
+<Base title={s.metaTitle} description={s.metaDescription} schema={[serviceSchema, faqSchema(s.faq), breadcrumbSchema(crumbs)]}>
+  <PageHero title={`${s.title} Kaune`} eyebrow={s.group} crumbs={crumbs}>
+    <div class="btn-row" style="margin-top:24px">
+      <a href={site.mobile.href} class="btn btn-primary"><Icon name="phone" size={16} /> Skambinti {site.mobile.display}</a>
+      <a href="/kontaktai/" class="btn btn-outline"><Icon name="calendar" size={16} /> Registruotis</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container layout">
+      <article class="content">
+        <p class="answer">{s.answer}</p>
+        {photo && <Image class="hero-img" src={photo} alt={`${s.title} – Panemunės veterinarija`} widths={[640, 960]} sizes="(max-width: 900px) 100vw, 760px" loading="eager" />}
+        {s.intro.map((p) => <p>{p}</p>)}
+
+        <h2>Ką apima paslauga</h2>
+        <ul class="check-list two">{s.includes.map((i) => <li>{i}</li>)}</ul>
+
+        <h2>Kada kreiptis į veterinarą</h2>
+        <ul class="when">{s.when.map((w) => <li><Icon name="check" size={18} />{w}</li>)}</ul>
+
+        <h2>Kaip vyksta procedūra</h2>
+        <ol class="steps">
+          {s.steps.map((st, i) => (
+            <li><span class="num">{i + 1}</span><div><h3>{st.t}</h3><p>{st.d}</p></div></li>
+          ))}
+        </ol>
+
+        <h2>Kaip pasiruošti vizitui</h2>
+        <ul class="check-list">{s.prep.map((p) => <li>{p}</li>)}</ul>
+
+        <h2>Dažnai užduodami klausimai</h2>
+        <Faq items={s.faq} />
+
+        {posts.length > 0 && (
+          <>
+            <h2>Skaitykite daugiau</h2>
+            <ul class="reads">
+              {posts.map((p) => <li><a href={`/blog/${p!.id}/`}><Icon name="arrow" size={16} /> {p!.data.title}</a></li>)}
+            </ul>
+          </>
+        )}
+      </article>
+
+      <aside class="side">
+        <nav class="side-card card" aria-label="Kitos paslaugos">
+          <h2 class="side-title">Visos paslaugos</h2>
+          <ul class="side-list">
+            {services.map((x) => <li><a href={`/paslaugos/${x.slug}/`} class:list={{ on: x.slug === s.slug }} aria-current={x.slug === s.slug ? 'page' : undefined}>{x.title}</a></li>)}
+          </ul>
+        </nav>
+        <div class="side-card card">
+          <h2 class="side-title">Registracija</h2>
+          <a class="side-phone" href={site.phone.href}><Icon name="phone" size={18} /> {site.phone.display}</a>
+          <a class="side-phone" href={site.mobile.href}><Icon name="phone" size={18} /> {site.mobile.display}</a>
+          <a class="side-mail" href={`mailto:${site.email}`}><Icon name="mail" size={16} /> {site.email}</a>
+          <hr />
+          <p class="side-row"><Icon name="pin" size={18} /> <span>{site.address.street}, Kaunas<br /><span class="muted">Panemunė</span></span></p>
+          <p class="side-row"><Icon name="clock" size={18} /> <span>I–V 10:00–19:00<br />VI 9:00–15:00</span></p>
+          <p class="side-urgent"><Icon name="alert" size={16} /> Skubiai – visą parą</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head"><h2>Susijusios paslaugos</h2></div>
+      <div class="grid grid-3">{related.map((r) => <ServiceCard s={r} />)}</div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container"><CtaBand title={`${s.title} – registruokitės`} /></div>
+  </section>
+</Base>
+
+<style>
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 56px; align-items: start; }
+  .content { max-width: 780px; }
+  .content > h2 { font-size: 1.75rem; margin-top: 48px; }
+  .content > p { color: #2b3846; }
+  .content :global(.hero-img) { width: 100%; border-radius: var(--radius-lg); aspect-ratio: 16/9; object-fit: cover; margin-bottom: 28px; box-shadow: var(--shadow); }
+  .check-list.two { grid-template-columns: 1fr 1fr; gap: 12px 24px; }
+  .when { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .when li { display: flex; gap: 12px; align-items: flex-start; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; }
+  .when :global(svg) { color: var(--accent-dark); flex-shrink: 0; margin-top: 3px; }
+  .steps { list-style: none; padding: 0; display: grid; gap: 16px; counter-reset: s; }
+  .steps li { display: flex; gap: 18px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; box-shadow: var(--shadow); }
+  .steps h3 { font-size: 1.1rem; margin-bottom: 4px; }
+  .steps p { margin: 0; color: var(--muted); }
+  .num { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .reads { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .reads a { display: flex; gap: 10px; align-items: center; color: var(--primary); font-weight: 600; }
+  .reads a:hover { text-decoration: underline; }
+  .side { align-self: stretch; display: flex; flex-direction: column; gap: 20px; }
+  .side > .side-card:last-child { position: sticky; top: calc(var(--header-h) + 20px); z-index: 1; }
+  .side-card { padding: 24px; }
+  .side-title { font-size: 1.1rem; margin-bottom: 14px; }
+  .side-phone { display: flex; gap: 10px; align-items: center; font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+  .side-mail { display: flex; gap: 8px; align-items: center; font-size: .9rem; color: var(--muted); word-break: break-all; }
+  .side-card hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+  .side-row { display: flex; gap: 10px; font-size: .95rem; }
+  .side-row :global(svg) { color: var(--primary); flex-shrink: 0; margin-top: 3px; }
+  .side-urgent { display: flex; gap: 8px; align-items: center; color: var(--accent-dark); font-weight: 600; margin: 0; }
+  .side-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; font-size: .95rem; }
+  .side-list a { display: block; padding: 7px 10px; border-radius: 8px; }
+  .side-list a:hover { background: var(--surface); }
+  .side-list a.on { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    .side { position: static; }
+    .side nav { display: none; }
+  }
+  @media (max-width: 640px) { .check-list.two { grid-template-columns: 1fr; } }
+</style>

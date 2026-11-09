@@ -1,0 +1,97 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { site } from '../../data/site';
+import { breadcrumbSchema, abs, ORG_ID } from '../../lib/schema';
+import { img } from '../../lib/images';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props as { p: CollectionEntry<'blog'> };
+const { Content } = await render(p);
+const photo = img(p.data.image)!;
+const crumbs = [
+  { name: 'Pradžia', href: '/' },
+  { name: 'Blogas', href: '/blog/' },
+  { name: p.data.title, href: `/blog/${p.id}/` },
+];
+const others = (await getCollection('blog')).filter((x) => x.id !== p.id && x.data.category === p.data.category).slice(0, 3);
+const more = others.length ? others : (await getCollection('blog')).filter((x) => x.id !== p.id).slice(0, 3);
+const fmt = new Date(p.data.date).toLocaleDateString('lt-LT', { year: 'numeric', month: 'long', day: 'numeric' });
+const postSchema = {
+  '@type': 'BlogPosting',
+  headline: p.data.title,
+  description: p.data.description,
+  datePublished: p.data.date,
+  dateModified: p.data.date,
+  inLanguage: 'lt-LT',
+  mainEntityOfPage: abs(`/blog/${p.id}/`),
+  image: abs(photo.src),
+  author: { '@type': 'Organization', name: site.name, url: `${site.url}/` },
+  publisher: { '@id': ORG_ID },
+  articleSection: p.data.category,
+};
+---
+<Base title={`${p.data.title} | Panemunės veterinarija`} description={p.data.description} type="article" published={p.data.date} schema={[postSchema, breadcrumbSchema(crumbs)]}>
+  <PageHero title={p.data.title} eyebrow={p.data.category} crumbs={crumbs}>
+    <p class="meta"><Icon name="calendar" size={16} /> <time datetime={p.data.date}>{fmt}</time> · {p.data.readTime} skaitymo · {site.name}</p>
+  </PageHero>
+
+  <section class="section">
+    <div class="container layout">
+      <article>
+        <p class="answer">{p.data.description}</p>
+        <Image class="cover" src={photo} alt={p.data.title} widths={[640, 960]} sizes="(max-width: 900px) 100vw, 760px" loading="eager" />
+        <div class="prose"><Content /></div>
+      </article>
+      <aside class="side card">
+        <h2>Reikia veterinaro?</h2>
+        <p class="muted">Panemunės veterinarija – {site.address.street}, Kaunas.</p>
+        <a class="btn btn-primary btn-pill" href={site.mobile.href}><Icon name="phone" size={16} /> {site.mobile.display}</a>
+        <p class="small muted">I–V 10:00–19:00, VI 9:00–15:00.<br />Skubiai – visą parą.</p>
+        <a class="link" href="/paslaugos/">Visos paslaugos <Icon name="arrow" size={15} /></a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <h2>Skaitykite taip pat</h2>
+      <div class="grid grid-3">
+        {more.map((o) => (
+          <a href={`/blog/${o.id}/`} class="mini card">
+            <span class="chip">{o.data.category}</span>
+            <h3>{o.data.title}</h3>
+            <span class="go">Skaityti <Icon name="arrow" size={15} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight"><div class="container"><CtaBand /></div></section>
+</Base>
+
+<style>
+  .meta { display: flex; align-items: center; gap: 8px; color: var(--muted); margin: 8px 0 0; font-size: .95rem; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 56px; align-items: start; }
+  article :global(.cover) { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 32px; box-shadow: var(--shadow); }
+  article { max-width: 780px; }
+  .side { position: sticky; top: calc(var(--header-h) + 20px); padding: 26px; display: grid; gap: 12px; }
+  .side h2 { font-size: 1.2rem; margin: 0; }
+  .side p { margin: 0; }
+  .small { font-size: .9rem; }
+  .link, .go { display: inline-flex; align-items: center; gap: 6px; color: var(--primary); font-weight: 600; }
+  .mini { padding: 22px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow .2s; }
+  .mini:hover { box-shadow: var(--shadow-lg); }
+  .mini .chip { align-self: flex-start; }
+  .mini h3 { font-size: 1.1rem; margin: 0; }
+  .go { margin-top: auto; }
+  @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } .side { position: static; } }
+</style>

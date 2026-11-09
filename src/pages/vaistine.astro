@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+import { breadcrumbSchema, faqSchema } from '../lib/schema';
+import { img } from '../lib/images';
+
+const crumbs = [{ name: 'Pradžia', href: '/' }, { name: 'Veterinarinė vaistinė', href: '/vaistine/' }];
+const cats = [
+  { id: 'maistas', icon: 'bowl', title: 'Maistas', text: 'Sausas ir drėgnas pašaras šunims, katėms ir mažiesiems gyvūnams, taip pat veterinarinės (gydomosios) dietos, kurias padės parinkti specialistas.', items: ['Pašarai šuniukams ir kačiukams', 'Suaugusių ir senjorų gyvūnų pašarai', 'Veterinarinės dietos', 'Skanėstai ir papildai'] },
+  { id: 'veterinariniai-vaistai', icon: 'pill', title: 'Veterinariniai vaistai', text: 'Gydytojo paskirti vaistai ir nereceptiniai preparatai – iškart po vizito, be papildomų kelionių.', items: ['Antiparazitinės priemonės (kirmėlės, erkės, blusos)', 'Ausų ir odos priežiūros preparatai', 'Paskirti receptiniai vaistai', 'Vitaminai ir papildai'] },
+  { id: 'homeopatiniai-vaistai', icon: 'leaf', title: 'Homeopatiniai vaistai', text: 'Homeopatiniai preparatai gyvūnams, kuriuos gydytojas gali rekomenduoti kaip papildomą priemonę.', items: ['Preparatai pagal gydytojo rekomendaciją', 'Konsultacija dėl vartojimo', 'Suderinimas su kitu gydymu'] },
+  { id: 'prieziura', icon: 'heart', title: 'Priežiūros priemonės', text: 'Viskas kasdienei augintinio priežiūrai ir higienai.', items: ['Šampūnai ir kailio priežiūra', 'Dantų priežiūros priemonės', 'Pooperacinės apykaklės ir kostiumai', 'Ausų valikliai'] },
+];
+const faq = [
+  { q: 'Kur yra Panemunės veterinarijos vaistinė?', a: 'Veterinarinė vaistinė veikia kartu su klinika – Vaidoto g. 97, Kaunas (Panemunė).' },
+  { q: 'Ar galima įsigyti vaistų be vizito pas gydytoją?', a: 'Nereceptinius preparatus, pašarus ir priežiūros priemones – taip. Receptiniai vaistai parduodami tik gydytojui paskyrus.' },
+  { q: 'Ar galite padėti išsirinkti pašarą?', a: 'Taip, specialistas patars, koks pašaras tinkamiausias pagal augintinio amžių, dydį, aktyvumą ir sveikatos būklę.' },
+  { q: 'Ar galima užsisakyti prekių telefonu?', a: 'Taip, paskambinkite ir patikslinkite, ar prekė yra – paruošime ją atsiėmimui klinikoje.' },
+];
+---
+<Base
+  title="Veterinarinė vaistinė Kaune, Panemunėje | Panemunės veterinarija"
+  description="Veterinarinė vaistinė Kaune, Vaidoto g. 97: veterinariniai ir homeopatiniai vaistai, pašarai, antiparazitinės ir priežiūros priemonės su specialisto patarimu."
+  schema={[breadcrumbSchema(crumbs), faqSchema(faq)]}
+>
+  <PageHero
+    title="Veterinarinė vaistinė Kaune"
+    eyebrow="Veterinarinė vaistinė"
+    lead="Mūsų veterinarijos vaistinė – ta vieta, kur dėmesingas veterinarijos specialistas pasiūlys jūsų augintiniui tinkamiausią maistą ar reikalingus vaistus."
+    crumbs={crumbs}
+  >
+    <div class="btn-row" style="margin-top:24px">
+      <a href={site.phone.href} class="btn btn-primary"><Icon name="phone" size={16} /> {site.phone.display}</a>
+      <a href="/parduotuve/" class="btn btn-outline"><Icon name="bag" size={16} /> Internetinė parduotuvė</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container intro">
+      <div>
+        <p class="answer">Panemunės veterinarijos vaistinė veikia kartu su klinika Kaune, Vaidoto g. 97. Čia įsigysite veterinarinių ir homeopatinių vaistų, pašarų bei priežiūros priemonių, o specialistas patars, kas tinkamiausia jūsų augintiniui.</p>
+        <ul class="check-list">
+          <li>Gydytojo paskirtus vaistus įsigysite iškart po vizito</li>
+          <li>Specialisto konsultacija renkantis pašarą ir priemones</li>
+          <li>Prekes galima užsisakyti telefonu ir atsiimti klinikoje</li>
+          <li>Darbo laikas kaip klinikos: I–V 10:00–19:00, VI 9:00–15:00</li>
+        </ul>
+      </div>
+      <div class="imgs">
+        <Image src={img('vaistine')!} alt="Veterinarinės vaistinės lentynos" widths={[480, 720]} sizes="(max-width: 900px) 100vw, 480px" loading="eager" />
+        <Image src={img('maistas')!} alt="Pašarai katėms ir šunims vaistinėje" widths={[320, 480]} sizes="(max-width: 900px) 50vw, 240px" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Kategorijos</span>
+        <h2>Ką rasite vaistinėje</h2>
+      </div>
+      <div class="grid grid-2">
+        {cats.map((c) => (
+          <div class="cat card reveal" id={c.id}>
+            <span class="icon-badge"><Icon name={c.icon} /></span>
+            <h3>{c.title}</h3>
+            <p class="muted">{c.text}</p>
+            <ul class="check-list">{c.items.map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <h2>Dažni klausimai apie vaistinę</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:0">
+    <div class="container"><CtaBand title="Turite klausimų apie vaistus ar pašarą?" text="Paskambinkite – patarsime ir paruošime prekes atsiėmimui." /></div>
+  </section>
+</Base>
+
+<style>
+  .intro { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+  .imgs { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; align-items: end; }
+  .imgs :global(img) { width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); object-fit: cover; }
+  .imgs :global(img:first-child) { aspect-ratio: 4/4.4; }
+  .imgs :global(img:last-child) { aspect-ratio: 3/4.2; }
+  .cat { padding: 30px; scroll-margin-top: calc(var(--header-h) + 20px); }
+  .cat h3 { margin-top: 18px; font-size: 1.35rem; }
+  .narrow { max-width: 860px; }
+  @media (max-width: 900px) { .intro { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { breadcrumbSchema, faqSchema } from '../lib/schema';
+
+// TODO: šalių taisykles patikrinti pagal aktualius reikalavimus prieš paleidžiant.
+const crumbs = [{ name: 'Pradžia', href: '/' }, { name: 'Keliaujantiems', href: '/keliaujantiems/' }];
+const faq = [
+  { q: 'Ką reikia turėti keliaujant su šunimi ar kate po ES?', a: 'Augintinis turi būti paženklintas mikroschema, turėti ES augintinio pasą ir galiojančią vakciną nuo pasiutligės. Kai kurioms šalims taikomi papildomi reikalavimai.' },
+  { q: 'Kiek laiko prieš kelionę reikia skiepyti nuo pasiutligės?', a: 'Po pirmosios vakcinacijos nuo pasiutligės paprastai reikia palaukti bent 21 dieną, kol vakcina tampa galiojanti kelionei.' },
+  { q: 'Ar reikia papildomų tyrimų keliaujant už ES ribų?', a: 'Dažnai reikia pasiutligės antikūnų titro tyrimo ir papildomų dokumentų. Reikalavimai skiriasi pagal šalį, todėl kelionę planuokite iš anksto ir pasitarkite su gydytoju.' },
+  { q: 'Ar galite išduoti ES augintinio pasą?', a: 'Taip, paženkliname gyvūną mikroschema, vakcinuojame ir išduodame ES augintinio pasą.' },
+];
+const checklist = [
+  { icon: 'chip', t: 'Mikroschema', d: 'ISO 11784/11785 standarto mikroschema, įvesta prieš vakcinaciją nuo pasiutligės.' },
+  { icon: 'shield', t: 'ES augintinio pasas', d: 'Mėlynas ES gyvūno augintinio pasas su įrašytais duomenimis ir vakcinomis.' },
+  { icon: 'syringe', t: 'Pasiutligės vakcina', d: 'Galiojanti vakcina; po pirminės vakcinacijos – laukimo laikotarpis (dažniausiai 21 diena).' },
+  { icon: 'flask', t: 'Papildomi reikalavimai', d: 'Kai kurioms šalims – gydymas nuo kaspinuočių, antikūnų titro tyrimas ar veterinarinis sertifikatas.' },
+];
+---
+<Base
+  title="Kelionės su augintiniu: pasas, čipas, vakcinos | Panemunės veterinarija"
+  description="Ką reikia žinoti keliaujant su šunimi ar kate: mikroschema, ES augintinio pasas, pasiutligės vakcina, antikūnių tyrimas. Paruošime augintinį kelionei Kaune."
+  schema={[breadcrumbSchema(crumbs), faqSchema(faq)]}
+>
+  <PageHero title="Keliaujantiems su augintiniu" eyebrow="Keliaujantiems" lead="Planuojate kelionę su šunimi ar kate? Paženkliname, vakcinuojame, išduodame ES augintinio pasą ir patariame dėl konkrečios šalies reikalavimų." crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container">
+      <p class="answer narrow">Keliaujant su augintiniu po Europos Sąjungą reikia mikroschemos, ES augintinio paso ir galiojančios vakcinos nuo pasiutligės. Kai kurios šalys taiko papildomus reikalavimus, todėl kelionę verta pradėti planuoti bent kelis mėnesius iš anksto.</p>
+      <div class="grid grid-4">
+        {checklist.map((c) => (
+          <div class="card item reveal"><span class="icon-badge"><Icon name={c.icon} /></span><h2>{c.t}</h2><p class="muted">{c.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container narrow">
+      <h2>Ką svarbu žinoti</h2>
+      <div class="prose">
+        <h3>Kelionės Europos Sąjungoje</h3>
+        <p>Šunys, katės ir šeškai, keliaujantys ES viduje, turi būti paženklinti mikroschema, turėti ES augintinio pasą ir galiojančią vakciną nuo pasiutligės. Jauniems gyvūnams svarbu nepamiršti laukimo laikotarpio po pirmosios vakcinacijos.</p>
+        <h3>Šalys su papildomais reikalavimais</h3>
+        <p>Kai kurios šalys (pavyzdžiui, Suomija, Airija, Malta, Norvegija) reikalauja šunis prieš atvykimą gydyti nuo kaspinuočių. Keliaujant už ES ribų dažnai reikalingas pasiutligės antikūnų titro tyrimas ir veterinarinis sertifikatas.</p>
+        <h3>Grįžimas į Lietuvą iš trečiųjų šalių</h3>
+        <p>Grįžtant iš kai kurių šalių už ES ribų gali prireikti antikūnų titro tyrimo, atlikto iš anksto. Reikalavimai keičiasi, todėl visada patikrinkite aktualią informaciją ir pasitarkite su gydytoju.</p>
+        <h3>Vežėjų reikalavimai</h3>
+        <p>Avialinijos, keltai ir autobusai taiko savo taisykles dėl nešioklės dydžio, gyvūno svorio ir dokumentų. Pasitikrinkite jas prieš perkant bilietus.</p>
+      </div>
+      <p class="tip"><Icon name="plane" size={20} /> Prieš kelionę pasitarkite su mūsų gydytoju – padėsime pasiruošti laiku.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <h2>Dažni klausimai apie keliones</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:0"><div class="container"><CtaBand title="Ruošiatės kelionei?" text="Užsiregistruokite čipavimui, vakcinacijai ir paso išdavimui." /></div></section>
+</Base>
+
+<style>
+  .narrow { max-width: 860px; }
+  .answer.narrow { margin: 0 auto 40px; }
+  .item { padding: 26px; }
+  .item h2 { font-size: 1.15rem; margin: 16px 0 6px; }
+  .item p { margin: 0; font-size: .95rem; }
+  .tip { display: flex; gap: 10px; align-items: center; font-weight: 600; color: var(--primary); margin-top: 24px; }
+</style>

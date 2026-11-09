@@ -1,0 +1,16 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+interface Props { title?: string; text?: string }
+const { title = 'Reikia veterinaro Kaune?', text = 'Registruokitės telefonu arba skambinkite skubiu atveju – atsiliepiame visą parą.' } = Astro.props;
+---
+<div class="cta-band reveal">
+  <div>
+    <h2>{title}</h2>
+    <p>{text}</p>
+  </div>
+  <div class="btn-row">
+    <a class="btn btn-white" href={site.mobile.href}><Icon name="phone" size={16} /> {site.mobile.display}</a>
+    <a class="btn btn-ghost-white" href="/kontaktai/"><Icon name="pin" size={16} /> Kaip atvykti</a>
+  </div>
+</div>

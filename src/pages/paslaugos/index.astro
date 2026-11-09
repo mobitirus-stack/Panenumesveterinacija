@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Faq from '../../components/Faq.astro';
+import { services, groups } from '../../data/services';
+import { breadcrumbSchema, faqSchema, abs } from '../../lib/schema';
+
+const crumbs = [{ name: 'Pradžia', href: '/' }, { name: 'Paslaugos', href: '/paslaugos/' }];
+const faq = [
+  { q: 'Kokias veterinarijos paslaugas teikiate?', a: 'Vakcinaciją, parazitų kontrolę, mikroschemų žymėjimą, laboratorinius tyrimus, chirurgiją, kastraciją ir sterilizaciją, dantų priežiūrą, odos ir ausų ligų gydymą, nėštumo priežiūrą ir pagalbą gimdant, konsultacijas, iškvietimus į namus ir skubią pagalbą visą parą.' },
+  { q: 'Ar reikia registruotis iš anksto?', a: 'Rekomenduojame registruotis telefonu 8 37 207 134 arba +370 673 36367 – taip išvengsite laukimo. Skubiais atvejais skambinkite bet kada.' },
+  { q: 'Kiek kainuoja paslaugos?', a: 'Kaina priklauso nuo paslaugos, gyvūno dydžio ir būklės. Tikslią kainą pasakysime telefonu arba konsultacijos metu.' },
+];
+const itemList = {
+  '@type': 'ItemList',
+  name: 'Panemunės veterinarijos paslaugos',
+  itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.title, url: abs(`/paslaugos/${s.slug}/`) })),
+};
+---
+<Base
+  title="Veterinarijos paslaugos Kaune | Panemunės veterinarija"
+  description="Visos Panemunės veterinarijos paslaugos Kaune: vakcinacija, parazitų kontrolė, čipavimas, tyrimai, chirurgija, sterilizacija, dantų priežiūra, skubi pagalba 24/7."
+  schema={[breadcrumbSchema(crumbs), faqSchema(faq), itemList]}
+>
+  <PageHero
+    title="Veterinarijos paslaugos Kaune"
+    eyebrow="Paslaugos"
+    lead="Panemunės veterinarija teikia visapusiškas paslaugas šunims, katėms, triušiams, šinšiloms ir kitiems augintiniams – nuo profilaktikos iki chirurgijos ir skubios pagalbos visą parą."
+    crumbs={crumbs}
+  />
+
+  {groups.map((g) => {
+    const list = services.filter((s) => s.group === g);
+    return list.length ? (
+      <section class="section tight group">
+        <div class="container">
+          <h2 class="group-title">{g}</h2>
+          <div class="grid grid-3">{list.map((s) => <ServiceCard s={s} />)}</div>
+        </div>
+      </section>
+    ) : null;
+  })}
+
+  <section class="section">
+    <div class="container narrow">
+      <h2>Dažni klausimai apie paslaugas</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:0">
+    <div class="container"><CtaBand /></div>
+  </section>
+</Base>
+
+<style>
+  .group + .group { padding-top: 0; }
+  .group-title { font-size: 1.6rem; display: flex; align-items: center; gap: 14px; }
+  .group-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .narrow { max-width: 860px; }
+</style>

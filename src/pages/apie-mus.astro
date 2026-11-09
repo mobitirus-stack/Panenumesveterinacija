@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+import { breadcrumbSchema, ORG_ID, abs } from '../lib/schema';
+import { img } from '../lib/images';
+
+const crumbs = [{ name: 'Pradžia', href: '/' }, { name: 'Apie mus', href: '/apie-mus/' }];
+const aboutSchema = { '@type': 'AboutPage', url: abs('/apie-mus/'), name: 'Apie Panemunės veterinariją', about: { '@id': ORG_ID } };
+const animals = ['Šunys', 'Katės', 'Triušiai', 'Šinšilos', 'Jūrų kiaulytės', 'Kiti graužikai', 'Ūkio gyvūnai (konsultacijos)'];
+---
+<Base
+  title="Apie mus – veterinarijos klinika Panemunėje | Panemunės veterinarija"
+  description="UAB „Panemunės veterinarija“ – veterinarijos klinika ir vaistinė Kaune, Panemunėje. Smulkiųjų gyvūnų gydymas ir profilaktika, skubi pagalba visą parą."
+  schema={[breadcrumbSchema(crumbs), aboutSchema]}
+>
+  <PageHero title="Apie Panemunės veterinariją" eyebrow="Apie mus" lead="Veterinarijos klinika ir veterinarinė vaistinė Kaune, Panemunės mikrorajone." crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container about">
+      <div class="reveal">
+        <p class="answer">UAB „Panemunės veterinarija“ – veterinarijos klinika ir vaistinė Kaune, Vaidoto g. 97. Gydome šunis, kates, triušius, šinšilas ir kitus graužikus, konsultuojame dėl ūkio gyvūnų, o skubiais atvejais dirbame visą parą.</p>
+        <p>Mūsų klinikoje dirbančių veterinarijos gydytojų patirtis ir specializacija – smulkiųjų naminių gyvūnų gydymas ir profilaktika. Siekiame, kad kiekvienas augintinis gautų kokybišką, rūpestingą priežiūrą, o šeimininkas – aiškius atsakymus ir ramybę.</p>
+        <p>Klinika veikia kartu su veterinarine vaistine, todėl paskirtus vaistus, pašarą ar priežiūros priemones galite įsigyti iškart po vizito. Esant pageidavimui atvykstame ir į namus.</p>
+        <div class="btn-row" style="margin-top:24px">
+          <a href="/paslaugos/" class="btn btn-primary btn-pill">Mūsų paslaugos</a>
+          <a href="/kontaktai/" class="btn btn-outline btn-pill">Kontaktai</a>
+        </div>
+      </div>
+      <div class="reveal media">
+        <Image src={img('apie-mus')!} alt="Veterinarijos gydytoja su kate" widths={[480, 720]} sizes="(max-width: 900px) 100vw, 520px" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head center"><span class="eyebrow">Vertybės</span><h2>Kaip mes dirbame</h2></div>
+      <div class="grid grid-3">
+        <div class="card v reveal"><span class="icon-badge"><Icon name="heart" /></span><h3>Rūpestis</h3><p class="muted">Su kiekvienu augintiniu elgiamės kaip su savo šeimos nariu – ramiai ir švelniai.</p></div>
+        <div class="card v reveal"><span class="icon-badge accent"><Icon name="chat" /></span><h3>Aiškumas</h3><p class="muted">Paaiškiname diagnozę, gydymo planą ir preliminarią kainą prieš procedūrą.</p></div>
+        <div class="card v reveal"><span class="icon-badge green"><Icon name="alert" /></span><h3>Pasiekiamumas</h3><p class="muted">Skubiais atvejais atsiliepiame visą parą, galime atvykti į namus.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container center">
+      <span class="eyebrow">Pacientai</span>
+      <h2>Kokius gyvūnus gydome</h2>
+      <div class="chips animals">{animals.map((a) => <span class="chip">{a}</span>)}</div>
+    </div>
+  </section>
+
+  <section class="section alt" id="komanda">
+    <div class="container">
+      <div class="section-head center"><span class="eyebrow">Komanda</span><h2>Mūsų gydytojai</h2><p class="lead">Komandos nuotraukos ir pristatymai bus įkelti netrukus.</p></div>
+      <div class="grid grid-3">
+        {[1, 2, 3].map(() => (
+          <div class="team card"><div class="ph"><Icon name="user" size={72} /></div><div class="tb"><h3>Veterinarijos gydytojas</h3><p class="muted">Smulkiųjų gyvūnų gydymas ir profilaktika</p></div></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight"><div class="container"><CtaBand title="Atvykite susipažinti" text={`${site.address.full}. I–V 10:00–19:00, VI 9:00–15:00.`} /></div></section>
+</Base>
+
+<style>
+  .about { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+  .media :global(img) { width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); aspect-ratio: 4/3.6; object-fit: cover; }
+  .v { padding: 28px; }
+  .v h3 { margin-top: 16px; }
+  .v p { margin: 0; }
+  .animals { justify-content: center; margin-top: 12px; }
+  .animals .chip { font-size: 1rem; padding: 10px 18px; background: #fff; }
+  .team { overflow: hidden; }
+  .ph { aspect-ratio: 4/3.4; display: grid; place-items: center; color: rgba(19,71,134,.35); background: linear-gradient(160deg, var(--primary-soft), #f6eafa); }
+  .tb { padding: 20px 24px; }
+  .tb h3 { margin-bottom: 4px; }
+  .tb p { margin: 0; }
+  @media (max-width: 900px) { .about { grid-template-columns: 1fr; } }
+</style>
