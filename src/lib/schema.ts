@@ -26,7 +26,7 @@ export function clinicSchema() {
     legalName: site.legalName,
     description: site.description,
     url: `${site.url}/`,
-    logo: abs('/logo.svg'),
+    logo: abs('/logo.png'),
     image: abs('/og-image.jpg'),
     telephone: site.phone.intl,
     email: site.email,
